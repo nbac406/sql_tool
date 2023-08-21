@@ -1,0 +1,12 @@
+DELIMITER //
+
+CREATE procedure GetPlayerInfo(in input_name varchar(255))
+BEGIN 
+	select * 
+	from services_match_participants 
+	where player_name = input_name;
+END //
+
+DELIMITER ;
+
+CALL GetPlayerInfo("Wirush");
