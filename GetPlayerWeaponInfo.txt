@@ -1,0 +1,13 @@
+DELIMITER //
+
+CREATE procedure GetPlayerWeaponInfo(in input_name varchar(255))
+begin
+select a.player_name, a.account_id, b.first_weapon_name, b.first_weapon_XPtotal, b.second_weapon_name, b.second_weapon_XPtotal, b.third_weapon_name, b.third_weapon_XPtotal, b.weapon_cluster
+from services_players a
+inner join services_weapon_masterys b
+on a.account_id = b.account_id
+where player_name = input_name
+limit 1;
+END //
+
+DELIMITER ;

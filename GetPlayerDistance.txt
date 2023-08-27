@@ -1,0 +1,16 @@
+DELIMITER //
+
+CREATE procedure GetPlayerDistance(in input_name varchar(255))
+begin
+SELECT match_id, victim_name, killer_x, killer_y
+FROM services_kill_logs 
+WHERE match_id IN (
+    SELECT match_id FROM pdgg.services_match_participants
+    WHERE player_name = input_name
+)
+UNION
+SELECT NULL, NULL, MAX(killer_x) - MIN(killer_x) as x_difference, MAX(killer_y) - MIN(killer_y) as y_difference
+FROM services_kill_logs;
+END //
+
+DELIMITER ;

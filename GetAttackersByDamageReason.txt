@@ -1,0 +1,20 @@
+DELIMITER //
+CREATE PROCEDURE GetAttackersByDamageReason(IN damage_reason VARCHAR(255))
+BEGIN
+  SELECT attacker_name, attacker_damageReason, SUM(attacker_damage) AS total_damage
+  FROM player_fight
+  WHERE attacker_damageReason = damage_reason
+  GROUP BY attacker_name, attacker_damageReason
+  HAVING total_damage = (
+    SELECT MAX(subquery.total_damage)
+    FROM (
+      SELECT attacker_name, SUM(attacker_damage) AS total_damage
+      FROM player_fight
+      WHERE attacker_damageReason = damage_reason
+      GROUP BY attacker_name, attacker_damageReason
+    ) AS subquery
+    WHERE subquery.attacker_name = player_fight.attacker_name
+  )
+  ORDER BY 3 desc;
+END //
+DELIMITER ;
